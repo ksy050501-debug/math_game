@@ -17,21 +17,41 @@
 </main>
 <script>
 'use strict';
+// Keep these storage keys stable across all future UI changes and deployments.
 const KEY='math-game-seven-v1';
+const BACKUP_KEY=KEY+'-backup';
 const rows=document.getElementById('rows');
 let students=[];
 let storageProblem=false;
 function blank(){return {name:'',scores:Array(7).fill(0)}}
 function validStudent(s){return s&&typeof s.name==='string'&&Array.isArray(s.scores)&&s.scores.length===7&&s.scores.every(Number.isSafeInteger)}
-try{
- const raw=localStorage.getItem(KEY);
- if(raw){const old=JSON.parse(raw);if(!Array.isArray(old.students)||!old.students.every(validStudent))throw Error('Invalid data');students=old.students;}
-}catch(e){storageProblem=true;}
+let foundSavedRecord=false;
+const savedRecords=[];
+for(const key of [KEY,BACKUP_KEY]){
+ try{
+  const raw=localStorage.getItem(key);
+  if(raw){
+   foundSavedRecord=true;
+   const record=JSON.parse(raw);
+   if(!Array.isArray(record.students)||!record.students.every(validStudent))continue;
+   savedRecords.push(record);
+  }
+ }catch(e){storageProblem=true;}
+}
+if(savedRecords.length){
+ savedRecords.sort((a,b)=>(Number(b.savedAt)||0)-(Number(a.savedAt)||0));
+ students=savedRecords[0].students;
+ storageProblem=false;
+}else if(foundSavedRecord){storageProblem=true;}
 if(!students.length)students=Array.from({length:10},blank);
 function save(){
- if(storageProblem){document.getElementById('saved').textContent='저장 기록을 읽지 못했습니다. 자동 저장이 중지되었습니다.';return;}
- try{localStorage.setItem(KEY,JSON.stringify({students}));document.getElementById('saved').textContent='자동 저장됨';}
- catch(e){document.getElementById('saved').textContent='자동 저장을 사용할 수 없습니다.';}
+ if(storageProblem){document.getElementById('saved').textContent='저장 기록을 읽지 못했습니다. 기존 기록 보호를 위해 자동 저장이 중지되었습니다.';return;}
+ const record=JSON.stringify({schemaVersion:1,savedAt:Date.now(),students});
+ let copiesSaved=0;
+ for(const key of [KEY,BACKUP_KEY]){
+  try{localStorage.setItem(key,record);copiesSaved++;}catch(e){}
+ }
+ document.getElementById('saved').textContent=copiesSaved===2?'자동 저장됨':copiesSaved===1?'자동 저장됨 · 복구 사본 저장 실패':'자동 저장을 사용할 수 없습니다.';
 }
 function element(tag,text){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e}
 function addRow(s){
@@ -57,8 +77,9 @@ function addRow(s){
 }
 students.forEach(addRow);
 document.getElementById('add').addEventListener('click',()=>{const s=blank();students.push(s);addRow(s);save();rows.lastElementChild.querySelector('.name').focus()});
-if(storageProblem)save();
+save();
 </script>
 </body>
 </html>
+
 
