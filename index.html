@@ -1,56 +1,64 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>수학 게임 · 7차시 누적 점수판</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>수학 게임 점수판</title>
 <style>
-:root{--ink:#18302b;--green:#126c54;--paper:#f3f6f1;--line:#dce5dd}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,'Malgun Gothic',sans-serif}header{background:var(--ink);color:white;padding:32px max(24px,calc((100vw - 1250px)/2))}h1{font-size:30px;margin:8px 0}header p{color:#c7ddd2;margin:0;font-size:15px}.tag{color:#a6e2bf;font-size:12px;letter-spacing:2px}main{max-width:1300px;margin:auto;padding:24px}.bar,.card{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}button,input,select,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:white;border-radius:9px;padding:10px 14px;color:var(--ink)}button:hover{background:#edf5ee}button.primary{background:var(--green);color:white;border-color:var(--green)}button.danger{color:#ab3838}input,select,textarea{border:1px solid #cbd8ce;border-radius:8px;padding:9px;background:white;color:var(--ink)}input[type=number]{width:78px}textarea{width:100%;height:90px;resize:vertical}label{font-size:14px}h2{font-size:19px;margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 2fr;gap:18px}.muted{color:#677a71;font-size:13px;line-height:1.6}.podium{display:flex;gap:12px;flex-wrap:wrap}.winner{background:#edf7ef;border-radius:12px;padding:16px;flex:1;min-width:140px}.winner strong{display:block;font-size:21px;margin:8px 0}.winner span{font-size:14px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;white-space:nowrap}th,td{text-align:center;border-bottom:1px solid var(--line);padding:13px 8px}th{font-size:13px;color:#677a71;background:#f6f8f4}td.name{text-align:left;font-weight:650}.total{color:var(--green);font-size:21px;font-weight:750}.actions{display:flex;align-items:center;gap:6px}.actions button{padding:8px}.empty{text-align:center;padding:40px;color:#677a71}.notice{min-height:22px;color:var(--green);font-size:13px}.rules{line-height:1.9;font-size:14px}details summary{cursor:pointer;font-weight:650}.small{font-size:12px}#project{width:230px}#hideScores:checked+span{color:var(--green)}body.hiddenScores .scoreValue{visibility:hidden}body.hiddenScores #leaders{display:none}@media(max-width:800px){.grid{grid-template-columns:1fr}main{padding:12px}header{padding:24px}h1{font-size:24px}}@media print{header{background:white;color:var(--ink);padding:10px}.bar,.entry,.rulesCard,.actions,button,.notice{display:none!important}.grid{display:block}body{background:white}main{padding:0}.card{border:0}input{border:0;width:55px!important;padding:0}body.hiddenScores .scoreValue{visibility:visible}body.hiddenScores #leaders{display:flex}}
-</style></head>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#243347;font-family:system-ui,'Malgun Gothic',sans-serif}main{max-width:1440px;margin:40px auto;padding:0 24px}h1{font-size:26px;margin:0 0 8px}p{color:#6b7788;font-size:14px;margin:0 0 24px}.sheet{overflow:auto;background:white;border:1px solid #e0e5ec;border-radius:14px}table{width:100%;border-collapse:separate;border-spacing:0;min-width:1150px}th{padding:18px 12px;background:#f0f4f9;font-size:15px;white-space:nowrap}td{padding:16px 10px;text-align:center;border-top:1px solid #e8edf3}th:first-child,td:first-child{position:sticky;left:0;z-index:1;background:#fff;border-right:1px solid #e8edf3}th:first-child{background:#f0f4f9}input,button{font:inherit}input{border:1px solid #d5dde8;border-radius:8px;padding:10px;text-align:center;background:#fff;color:#243347}input:focus{outline:2px solid #83adeb;outline-offset:1px}.name{width:130px;text-align:left}.score{width:94px;font-size:20px;font-weight:600;appearance:textfield}.score::-webkit-inner-spin-button,.score::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.controls{display:flex;justify-content:center;gap:4px;margin-top:7px}button{border:1px solid #d8e1ed;background:#f4f7fb;color:#354961;border-radius:7px;cursor:pointer;padding:7px 11px}button:hover{background:#e5edf8}button:active{transform:translateY(1px)}.step{font-size:18px;width:29px;padding:3px 0}.joker{font-size:12px;color:#916326;background:#fff8eb;border-color:#eedebe;padding:5px 7px}.total{font-size:24px;font-weight:750;color:#326ac1;min-width:85px}.footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;gap:12px}#add{background:#326ac1;color:#fff;border:0;padding:11px 17px}#saved{font-size:12px;color:#7b8796}@media(max-width:700px){main{margin:24px auto;padding:0 12px}.name{width:100px}h1{font-size:23px}}
+</style>
+</head>
 <body>
-<header><div class="tag">MATH GAME · INDIVIDUAL CHALLENGE</div><h1>수학 게임 누적 점수판</h1><p>7차시의 도전을 모아, 3단원 최종 우승자를 만나세요.</p></header>
 <main>
-<div class="bar"><label>활동 이름 <input id="project" maxlength="80" placeholder="예: 3단원 수학 게임"></label><label>현재 활동 <select id="session"></select></label><label><input type="checkbox" id="hideScores"><span> 학생 화면에서 점수 숨기기</span></label><span id="saved" class="muted" role="status">자동 저장 준비</span></div>
-<div class="grid">
-<section class="card entry"><h2>학생 등록</h2><p class="muted">한 줄에 한 명씩 입력하세요. 같은 이름은 구별할 수 있도록 번호를 붙여 주세요.</p><textarea id="names" placeholder="김수학&#10;이도전&#10;박탐구" aria-label="학생 이름 목록"></textarea><p><button class="primary" id="add">학생 추가</button></p><div class="notice" id="notice" role="status"></div></section>
-<section class="card"><h2>현재 누적 순위 <span class="muted">· 동점은 공동 순위</span></h2><div class="podium" id="leaders"></div><p class="muted">누적 점수 = 1~7차시 점수의 합계. 마지막 차시까지 입력하면 누적 1위가 최종 우승자입니다.</p></section>
-</div>
-<section class="card"><div class="bar" style="padding:0;border:0"><h2 style="margin:0">7차시 점수 기록</h2><label>정답 획득 점수 <input type="number" id="award" value="1" min="0" step="1"></label><label>조커 초기화 범위 <select id="jokerScope"><option value="session">현재 차시 점수</option><option value="all">전체 누적 점수</option></select></label></div><p class="muted">점수 칸에서 직접 수정하거나, 학생별 정답·오답·조커 버튼을 누르세요. 버튼은 선택한 현재 차시에 적용됩니다. 조커는 확인 후 초기화됩니다.</p><div class="scroll"><table><thead><tr><th>순위</th><th>학생 이름</th><th>1차시</th><th>2차시</th><th>3차시</th><th>4차시</th><th>5차시</th><th>6차시</th><th>7차시</th><th>누적</th><th>현재 차시 점수 조작</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div></section>
-<section class="card rulesCard"><details><summary>게임 진행 규칙</summary><ol class="rules"><li>개인전으로 진행하며, 3단원 동안 누적 승점이 가장 높은 학생이 우승합니다.</li><li>문제를 맞히면 자리에서 일어납니다. 틀리면 −2점입니다.</li><li>선생님이 초반 점수를 공개합니다. 첫 번째 번호를 추천합니다.</li><li>학생이 한 명씩 차례대로 번호를 고릅니다. 계속 도전하는 학생에게 발표 기회를 주세요.</li><li>계속 도전하려면 서 있고, 점수 획득을 그만하려면 앉습니다.</li><li>조커카드가 나오면 모은 점수를 초기화합니다. 위의 범위 설정에 따라 현재 차시 또는 전체 누적 점수를 0으로 만듭니다.</li></ol></details></section>
-<div class="bar"><button id="undo">직전 변경 되돌리기</button><button id="backup">백업 저장 (JSON)</button><button id="restore">백업 불러오기</button><input id="file" type="file" accept=".json,application/json" hidden><button id="csv">점수표 저장 (CSV)</button><button id="print">인쇄</button><button class="danger" id="reset">모든 기록 삭제</button></div><p class="muted">데이터는 이 브라우저에 저장됩니다. 다른 컴퓨터로 옮기거나 브라우저 데이터를 지우기 전에는 JSON 백업을 저장하세요. HTML 파일 자체에는 입력 기록이 포함되지 않습니다.</p>
+<h1>수학 게임 점수판</h1>
+<p>이름과 점수를 입력하세요. + / − 는 1점씩, 조커는 해당 차시를 0점으로 만듭니다.</p>
+<div class="sheet"><table aria-label="학생별 7차시 점수와 누적 점수"><thead><tr><th scope="col">이름</th><th scope="col">1차시</th><th scope="col">2차시</th><th scope="col">3차시</th><th scope="col">4차시</th><th scope="col">5차시</th><th scope="col">6차시</th><th scope="col">7차시</th><th scope="col">누적</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="footer"><button id="add" type="button">+ 학생 추가</button><span id="saved" role="status"></span></div>
 </main>
 <script>
 'use strict';
-const $=id=>document.getElementById(id), KEY='math-game-seven-v1';
-let state={title:'3단원 수학 게임',session:0,award:1,scope:'session',students:[]},history=[];
-const valid=x=>x&&typeof x.title==='string'&&x.title.length<=80&&Number.isInteger(x.session)&&x.session>=0&&x.session<7&&Number.isSafeInteger(x.award)&&x.award>=0&&['session','all'].includes(x.scope)&&Array.isArray(x.students)&&x.students.length<=1000&&x.students.every(s=>s&&typeof s.id==='string'&&typeof s.name==='string'&&s.name.trim()&&s.name.length<=80&&Array.isArray(s.scores)&&s.scores.length===7&&s.scores.every(Number.isSafeInteger))&&new Set(x.students.map(s=>s.id)).size===x.students.length;
-try{const raw=localStorage.getItem(KEY);if(raw){const x=JSON.parse(raw);if(valid(x))state=x;}}catch(e){$('notice').textContent='저장 기록을 읽지 못했습니다. 백업 파일을 불러올 수 있습니다.';}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));$('saved').textContent='이 브라우저에 저장됨';}catch(e){$('saved').textContent='자동 저장 실패 · JSON 백업을 저장하세요';}}
-function checkpoint(){history.push(JSON.stringify(state));if(history.length>30)history.shift();}
-function total(s){return s.scores.reduce((a,b)=>a+b,0)}
-function ranked(){return [...state.students].sort((a,b)=>total(b)-total(a)||a.name.localeCompare(b.name,'ko'))}
-function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e}
-function commit(){save();render()}
-function render(){
- $('project').value=state.title;$('session').value=state.session;$('award').value=state.award;$('jokerScope').value=state.scope;$('undo').disabled=!history.length;
- const list=ranked();$('rows').replaceChildren();$('leaders').replaceChildren();let rank=0,previous=null;
- list.forEach((s,i)=>{const sum=total(s);if(previous===null||sum!==previous)rank=i+1;previous=sum;
- if(rank<=3){const c=el('div',undefined,'winner');c.append(el('span',rank+'위'),el('strong',s.name),el('span',sum+'점','scoreValue'));$('leaders').append(c);}
- const tr=el('tr');tr.append(el('td',rank+'위','scoreValue'),el('td',s.name,'name'));
- s.scores.forEach((v,j)=>{const td=el('td'),input=el('input');input.type='number';input.step='1';input.value=v;input.className='scoreValue';input.setAttribute('aria-label',s.name+' '+(j+1)+'차시 점수');input.onchange=()=>{const n=Number(input.value);if(!input.value.trim()||!Number.isSafeInteger(n)){input.value=s.scores[j];return;}checkpoint();s.scores[j]=n;commit()};td.append(input);tr.append(td)});
- tr.append(el('td',sum,'total scoreValue'));const td=el('td'),actions=el('div',undefined,'actions');
- const correct=el('button','정답 +'+state.award),wrong=el('button','오답 −2'),joker=el('button','조커');
- function delta(n){const next=s.scores[state.session]+n;if(!Number.isSafeInteger(next))return;checkpoint();s.scores[state.session]=next;commit()}
- correct.onclick=()=>delta(state.award);wrong.onclick=()=>delta(-2);joker.onclick=()=>{if(confirm(s.name+' 학생의 '+(state.scope==='all'?'전체 7차시 점수':(state.session+1)+'차시 점수')+'를 0점으로 초기화할까요?')){checkpoint();if(state.scope==='all')s.scores.fill(0);else s.scores[state.session]=0;commit()}};
- actions.append(correct,wrong,joker);td.append(actions);tr.append(td);const manage=el('td'),rename=el('button','이름'),remove=el('button','삭제','danger');rename.onclick=()=>{const name=prompt('학생 이름 수정',s.name);if(name&&name.trim()&&name.trim().length<=80){checkpoint();s.name=name.trim();commit()}};remove.onclick=()=>{if(confirm(s.name+' 학생과 모든 점수를 삭제할까요?')){checkpoint();state.students=state.students.filter(x=>x.id!==s.id);commit()}};manage.append(rename,remove);tr.append(manage);$('rows').append(tr);
- });if(!list.length){$('leaders').append(el('p','학생을 등록하면 순위가 표시됩니다.','muted'));const tr=el('tr'),td=el('td','등록된 학생이 없습니다. 이름을 먼저 입력하세요.','empty');td.colSpan=12;tr.append(td);$('rows').append(tr)}
+const KEY='math-game-seven-v1';
+const rows=document.getElementById('rows');
+let students=[];
+let storageProblem=false;
+function blank(){return {name:'',scores:Array(7).fill(0)}}
+function validStudent(s){return s&&typeof s.name==='string'&&Array.isArray(s.scores)&&s.scores.length===7&&s.scores.every(Number.isSafeInteger)}
+try{
+ const raw=localStorage.getItem(KEY);
+ if(raw){const old=JSON.parse(raw);if(!Array.isArray(old.students)||!old.students.every(validStudent))throw Error('Invalid data');students=old.students;}
+}catch(e){storageProblem=true;}
+if(!students.length)students=Array.from({length:10},blank);
+function save(){
+ if(storageProblem){document.getElementById('saved').textContent='저장 기록을 읽지 못했습니다. 자동 저장이 중지되었습니다.';return;}
+ try{localStorage.setItem(KEY,JSON.stringify({students}));document.getElementById('saved').textContent='자동 저장됨';}
+ catch(e){document.getElementById('saved').textContent='자동 저장을 사용할 수 없습니다.';}
 }
-for(let i=0;i<7;i++){const op=el('option',(i+1)+'차시');op.value=i;$('session').append(op)}
-$('add').onclick=()=>{const names=$('names').value.split(/\r?\n/).map(n=>n.trim()).filter(Boolean);if(!names.length)return;if(names.some(n=>n.length>80)||state.students.length+names.length>1000){$('notice').textContent='이름은 80자 이내, 학생은 1,000명 이내로 입력하세요.';return}checkpoint();names.forEach(name=>state.students.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),name,scores:Array(7).fill(0)}));$('names').value='';$('notice').textContent=names.length+'명 등록 완료';commit()};
-$('project').onchange=()=>{checkpoint();state.title=$('project').value.trim()||'수학 게임';commit()};$('session').onchange=()=>{state.session=Number($('session').value);commit()};$('award').onchange=()=>{const n=Number($('award').value);if(Number.isSafeInteger(n)&&n>=0){state.award=n;commit()}else $('award').value=state.award};$('jokerScope').onchange=()=>{state.scope=$('jokerScope').value;commit()};$('hideScores').onchange=()=>document.body.classList.toggle('hiddenScores',$('hideScores').checked);
-$('undo').onclick=()=>{if(history.length){state=JSON.parse(history.pop());commit()}};
-function download(content,type,extension){const url=URL.createObjectURL(new Blob([content],{type}));const a=el('a');a.href=url;a.download='수학게임-점수표-'+new Date().toISOString().slice(0,10)+extension;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-$('backup').onclick=()=>download(JSON.stringify(state,null,2),'application/json','.json');$('restore').onclick=()=>$('file').click();$('file').onchange=async()=>{const f=$('file').files[0];if(!f)return;try{const next=JSON.parse(await f.text());if(!valid(next))throw Error();if(confirm('백업의 '+next.students.length+'명 기록으로 현재 점수표를 바꿀까요?')){checkpoint();state=next;commit();$('notice').textContent='백업 불러오기 완료'}}catch(e){alert('올바른 수학 게임 JSON 백업 파일이 아닙니다.')}finally{$('file').value=''}};
-$('csv').onclick=()=>{const cell=v=>'"'+String(v).replace(/"/g,'""')+'"';const rows=[['학생 이름','1차시','2차시','3차시','4차시','5차시','6차시','7차시','누적 점수'],...ranked().map(s=>[/^[=+\-@\t\r]/.test(s.name)?"'"+s.name:s.name,...s.scores,total(s)])];download('\uFEFF'+rows.map(r=>r.map(cell).join(',')).join('\r\n'),'text/csv;charset=utf-8','.csv')};$('print').onclick=()=>window.print();$('reset').onclick=()=>{if(confirm('모든 학생과 점수를 삭제할까요? 먼저 JSON 백업을 저장해 주세요.')){checkpoint();state.students=[];commit()}};
-render();save();
-</script></body></html>
+function element(tag,text){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e}
+function addRow(s){
+ const tr=element('tr'),nameCell=element('td'),name=element('input');
+ name.type='text';name.className='name';name.placeholder='이름 입력';name.maxLength=80;name.value=s.name;name.setAttribute('aria-label','학생 이름');
+ name.addEventListener('input',()=>{s.name=name.value;save()});nameCell.append(name);tr.append(nameCell);
+ const total=element('td');total.className='total';total.setAttribute('aria-label','누적 점수');
+ function updateTotal(){total.textContent=s.scores.reduce((a,b)=>a+b,0)}
+ s.scores.forEach((value,i)=>{
+  const cell=element('td'),input=element('input');input.type='number';input.step='1';input.className='score';input.value=value;input.setAttribute('aria-label',(i+1)+'차시 점수');
+  function setScore(n){if(!Number.isSafeInteger(n))return; s.scores[i]=n;input.value=n;updateTotal();save()}
+  input.addEventListener('input',()=>{if(input.value.trim()!==''){const n=Number(input.value);if(Number.isSafeInteger(n)){s.scores[i]=n;updateTotal();save()}}});
+  input.addEventListener('change',()=>{if(input.value.trim()==='')setScore(0);else if(!Number.isSafeInteger(Number(input.value)))input.value=s.scores[i]});
+  const controls=element('div');controls.className='controls';
+  const minus=element('button','−'),plus=element('button','+'),joker=element('button','조커');
+  minus.className=plus.className='step';joker.className='joker';
+  for(const b of [minus,plus,joker])b.type='button';
+  minus.setAttribute('aria-label',(i+1)+'차시 1점 빼기');plus.setAttribute('aria-label',(i+1)+'차시 1점 더하기');joker.setAttribute('aria-label',(i+1)+'차시 0점으로 초기화');
+  minus.addEventListener('click',()=>setScore(s.scores[i]-1));plus.addEventListener('click',()=>setScore(s.scores[i]+1));joker.addEventListener('click',()=>setScore(0));
+  controls.append(minus,plus,joker);cell.append(input,controls);tr.append(cell);
+ });
+ updateTotal();tr.append(total);rows.append(tr);
+}
+students.forEach(addRow);
+document.getElementById('add').addEventListener('click',()=>{const s=blank();students.push(s);addRow(s);save();rows.lastElementChild.querySelector('.name').focus()});
+if(storageProblem)save();
+</script>
+</body>
+</html>
 
